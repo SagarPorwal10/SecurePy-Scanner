@@ -28,7 +28,7 @@ It features a **"Hacker-style" Rich CLI** for local audits and integrates native
 ## 📸 Screenshots
 
 ### The "Hacker" CLI Dashboard
-SecurePy.png
+![SecurePy CLI Dashboard](SecurePy.png)
 
 
 ## 🛠️ Tech Stack
