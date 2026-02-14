@@ -28,12 +28,8 @@ It features a **"Hacker-style" Rich CLI** for local audits and integrates native
 ## 📸 Screenshots
 
 ### The "Hacker" CLI Dashboard
-*(Add a screenshot of your terminal output here)*
+SecurePy.png
 
-### GitHub Actions Integration (Quality Gate)
-*(Add a screenshot of the Red/Failure action in GitHub here)*
-
----
 
 ## 🛠️ Tech Stack
 
