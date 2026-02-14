@@ -1,6 +1,5 @@
 name: SecurePy Enterprise Audit
 
-# Trigger the scan on every push to main or pull request
 on:
   push:
     branches: [ "main" ]
@@ -12,35 +11,38 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      # 1. Check out the repository code
+      # 1. Check out the repository code (Updated to v4)
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      # 2. Set up Python environment
+      # 2. Set up Python environment (Updated to v5)
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      # 3. Install Dependencies (Rich, etc.)
+      # 3. Install Dependencies
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
           pip install rich
 
       # 4. Run SecurePy Scanner
-      # We run it against the current directory (".") or specific files
-      # If the scanner finds issues, it exits with code 1, which fails the build.
+      # We pipe the output to a log file so we can upload it later
       - name: Run Security Scanner
         run: |
           echo "🚀 Starting Enterprise Security Audit..."
-          python main.py test_vulnerable.py
+          # The 'tee' command prints to screen AND saves to file at the same time
+          python main.py test_vulnerable.py 2>&1 | tee output.log
+          
+          # We check the exit code of python manually to ensure the build fails if issues are found
+          # (tee always returns 0, so we use PIPESTATUS to get the python exit code)
+          exit ${PIPESTATUS[0]}
 
-      # 5. (Optional) Upload Report if failed
-      # This saves the output so you can download it later
+      # 5. Upload Report if failed (Updated to v4)
       - name: Upload Logs
         if: failure()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: security-report
           path: output.log
