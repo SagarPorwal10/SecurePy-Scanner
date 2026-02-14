@@ -1,0 +1,46 @@
+name: SecurePy Enterprise Audit
+
+# Trigger the scan on every push to main or pull request
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  security-check:
+    runs-on: ubuntu-latest
+    
+    steps:
+      # 1. Check out the repository code
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # 2. Set up Python environment
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      # 3. Install Dependencies (Rich, etc.)
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install rich
+
+      # 4. Run SecurePy Scanner
+      # We run it against the current directory (".") or specific files
+      # If the scanner finds issues, it exits with code 1, which fails the build.
+      - name: Run Security Scanner
+        run: |
+          echo "🚀 Starting Enterprise Security Audit..."
+          python main.py test_vulnerable.py
+
+      # 5. (Optional) Upload Report if failed
+      # This saves the output so you can download it later
+      - name: Upload Logs
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: security-report
+          path: output.log
